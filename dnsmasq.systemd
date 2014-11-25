@@ -1,0 +1,13 @@
+[Unit]
+Description = DNSMasq
+After= network.service
+
+[Service]
+ExecStart=/bin/bash -c '/usr/bin/docker run --name=masq -v /home/core/dnsmasq.d:/etc/dnsmasq.d skeenan/dnsmasq:14.10.1'
+ExecStartPost=/bin/bash -c '/srv/tools/pipework enp3s0 -i eth1 masq 192.168.1.209/24@192.168.1.1'
+ExecStop=/usr/bin/docker stop masq
+Restart=always
+MemoryLimit=1G
+
+[Install]
+WantedBy=local.target
